@@ -81,6 +81,74 @@ const StyledButton = styled(Button)`
     }
   }
 `;
+const StyledAccountPrompt = styled(Typography)`
+  && {
+    font-family: "Lato";
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16.8px;
+    color: #828282;
+    margin-bottom: 10px;
+  }
+`;
+const StyledDivider = styled(Divider)`
+  && {
+    width: 100%;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    color: #828282;
+    font-size: 14px;
+    justify-content: center;
+
+    &::before,
+    &::after {
+      content: "";
+      height: 0.4px;
+      background: #e6e9fa;
+
+      width: 93.5px;
+    }
+  }
+`;
+const SocialButton = styled(Button)`
+  && {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    margin: 0 0.5rem;
+    text-transform: none;
+    font-size: 14px;
+    border: 1px solid #3949ab;
+    color: #3949ab;
+
+    &:hover {
+      background-color: rgba(57, 73, 171, 0.1);
+    }
+
+    .MuiButton-startIcon {
+      margin-right: 8px;
+    }
+    img {
+      width: 24px;
+      height: 24px;
+    }
+    &.Mui-disabled {
+      background-color: #b0b7db;
+      color: #ffffff;
+      border: 1px solid #b0b7db;
+    }
+  }
+`;
+const SocialLogin = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 1rem 0;
+`;
 interface LoginFormProps {
   setActiveForm: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -191,10 +259,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
             Forgot password?
           </Link>
         </FormActions>
+
         <StyledButton type="submit" disabled={!isFormValid}>
           Log in
         </StyledButton>
+
+        <StyledDivider>Or</StyledDivider>
+
+        <SocialLogin>
+          <SocialButton
+            variant="outlined"
+            startIcon={<img src={google} alt="Google" />}
+          >
+            Google
+          </SocialButton>
+          <SocialButton
+            variant="outlined"
+            startIcon={<img src={facebook} alt="Facebook" />}
+          >
+            Facebook
+          </SocialButton>
+        </SocialLogin>
       </form>
+
+      <StyledAccountPrompt>Have no account yet?</StyledAccountPrompt>
+      <StyledButton onClick={() => setActiveForm("register")}>
+        Register
+      </StyledButton>
     </StyledLoginForm>
   );
 };
