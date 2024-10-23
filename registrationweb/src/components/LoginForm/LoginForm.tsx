@@ -29,18 +29,6 @@ const StyledLoginForm = styled(Box)`
   }
 `;
 
-const StyledTitle = styled(Typography)`
-  && {
-    font-family: "lato";
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 24px;
-    text-align: left;
-    color: #3949ab;
-    margin-bottom: 24px;
-  }
-`;
-
 const FormGroup = styled(Box)`
   margin-bottom: 1rem;
   width: 100%;
@@ -53,13 +41,6 @@ const FormActions = styled(Box)`
   align-items: center;
   margin-bottom: 1rem;
   width: 100%;
-`;
-
-const SocialLogin = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 1rem 0;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -88,8 +69,15 @@ const StyledButton = styled(Button)`
     backdrop-filter: blur(24px);
     background-color: #3949ab;
     color: white;
+
     &:hover {
       background-color: #27368f;
+    }
+
+    &:disabled {
+      background-color: rgb(179, 179, 217);
+      border-color: rgb(179, 179, 217);
+      color: white;
     }
   }
 `;
