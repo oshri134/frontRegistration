@@ -8,6 +8,7 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import styled from "styled-components";
 import { toast } from "react-toastify";
@@ -53,7 +54,15 @@ const StyledTextField = styled(TextField)`
     border-radius: 8px;
   }
 `;
-
+const LoadingWrapper = styled(Box)`
+  && {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 8px;
+  }
+`;
 const StyledButton = styled(Button)`
   && {
     width: 358px;
@@ -156,6 +165,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -164,9 +174,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
   const isFormValid = email !== "" && password !== "";
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       const loginData = { email, password };
-
+  
       const loginResponse = await fetch(
         "https://registration-test-1-gkgcayd0d5d3exbp.israelcentral-01.azurewebsites.net/login",
         {
@@ -177,7 +188,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
           body: JSON.stringify(loginData),
         }
       );
-
+  
       if (loginResponse.ok) {
         const welcomeResponse = await fetch(
           "https://gptregistration-g3gmc6d2gyfkfrfs.israelcentral-01.azurewebsites.net/get-login-message",
@@ -186,6 +197,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({ username: email.split('@')[0] }), // שליחת שם המשתמש מהאימייל
           }
         );
         const welcomeData = await welcomeResponse.json();
@@ -197,6 +209,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
       console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -260,8 +274,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ setActiveForm }) => {
           </Link>
         </FormActions>
 
-        <StyledButton type="submit" disabled={!isFormValid}>
-          Log in
+        <StyledButton type="submit" disabled={!isFormValid || isLoading}>
+          {isLoading ? (
+            <LoadingWrapper>
+              <CircularProgress size={20} color="inherit" />
+              Logging in...
+            </LoadingWrapper>
+          ) : (
+            "Log in"
+          )}
         </StyledButton>
 
         <StyledDivider>Or</StyledDivider>

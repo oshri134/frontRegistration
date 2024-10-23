@@ -8,6 +8,7 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import styled from "styled-components";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -62,7 +63,15 @@ const SocialSignup = styled(Box)`
   width: 100%;
   margin: 1rem 0;
 `;
-
+const LoadingWrapper = styled(Box)`
+  && {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 8px;
+  }
+`;
 const SocialButton = styled(Button)`
   && {
     flex: 1;
@@ -202,6 +211,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isFormValid =
     username &&
@@ -218,6 +228,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
+    setIsLoading(true);
+
     const registrationData: RegistrationData = { username, email, password };
 
     try {
@@ -245,7 +257,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
           }
         );
         const welcomeData = await welcomeResponse.json();
-        toast.success(welcomeData.message || "register successful!");
+        toast.success(welcomeData.message || "Registration successful!");
         setUsername("");
         setEmail("");
         setPassword("");
@@ -259,6 +271,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
       console.error("Registration error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -357,8 +371,15 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             }}
           />
         </FormGroup>
-        <StyledButton type="submit" disabled={!isFormValid}>
-          Sign up
+        <StyledButton type="submit" disabled={!isFormValid || isLoading}>
+          {isLoading ? (
+            <LoadingWrapper>
+              <CircularProgress size={20} color="inherit" />
+              Signing up...
+            </LoadingWrapper>
+          ) : (
+            "Sign up"
+          )}
         </StyledButton>
         <StyledDivider>Or</StyledDivider>
         <SocialLogin>
